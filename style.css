@@ -1,0 +1,36 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+.item-form, .item-list {
+    margin-bottom: 20px;
+}
+.item-list ul {
+    list-style-type: none;
+    padding: 0;
+}
+.item-list li {
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+.item-list input[type="checkbox"] {
+    margin-right: 10px;
+}
+.item-list img {
+    max-width: 100px;
+    max-height: 100px;
+    margin-right: 10px;
+}
+.item-form input, .item-form select {
+    display: block;
+    margin-bottom: 10px;
+}
+.item-form input[type="file"] {
+    margin-bottom: 10px;
+}
