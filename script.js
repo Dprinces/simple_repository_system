@@ -24,13 +24,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    const saveItem = (event) => {
+    const readFileAsBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    };
+
+    const saveItem = async (event) => {
         event.preventDefault();
 
         const id = itemIdInput.value;
         const name = nameInput.value;
         const category = categorySelect.value;
-        const picture = pictureInput.files[0] ? URL.createObjectURL(pictureInput.files[0]) : '';
+        const file = pictureInput.files[0];
+        const picture = file ? await readFileAsBase64(file) : '';
 
         const items = JSON.parse(localStorage.getItem('items')) || [];
 
@@ -61,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
             categorySelect.value = item.category;
             itemIdInput.value = item.id;
             // Load picture if needed
-            pictureInput.value = '';
+            pictureInput.value = ''; // Clear file input
         }
     };
 
