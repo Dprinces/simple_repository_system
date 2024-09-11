@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const categorySelect = document.getElementById('category');
     const itemIdInput = document.getElementById('itemId');
     const deleteSelectedButton = document.getElementById('deleteSelected');
-
+   
     const loadItems = () => {
         itemList.innerHTML = '';
         const items = JSON.parse(localStorage.getItem('items')) || [];
@@ -17,13 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 <img src="${item.picture}" alt="${item.name}">
                 <span>${item.name}</span>
                 <span>(${item.category})</span>
-                <button class="edit-button" data-id="${item.id}">Edit</button>
                 <button class="delete-button" data-id="${item.id}">Delete</button>
             `;
             itemList.appendChild(listItem);
         });
     };
 
+    // Function to read a file and convert it to a Base64 string
     const readFileAsBase64 = (file) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -33,6 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+  
+    // Function to save an item (either new or updated)
     const saveItem = async (event) => {
         event.preventDefault();
 
@@ -45,9 +47,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const items = JSON.parse(localStorage.getItem('items')) || [];
 
         if (id) {
+            // Update existing item
             const index = items.findIndex(item => item.id === id);
             items[index] = { id, name, category, picture };
         } else {
+            // Add new item
             const newItem = {
                 id: Date.now().toString(),
                 name,
@@ -57,31 +61,23 @@ document.addEventListener('DOMContentLoaded', () => {
             items.push(newItem);
         }
 
+        // Save items to localStorage and reload the list
         localStorage.setItem('items', JSON.stringify(items));
         itemForm.reset();
         itemIdInput.value = '';
-        loadItems();
+        loadItems(); // Reload the item list
     };
 
-    const editItem = (id) => {
-        const items = JSON.parse(localStorage.getItem('items')) || [];
-        const item = items.find(item => item.id === id);
-        if (item) {
-            nameInput.value = item.name;
-            categorySelect.value = item.category;
-            itemIdInput.value = item.id;
-            // Load picture if needed
-            pictureInput.value = ''; // Clear file input
-        }
-    };
-
+    
+    // Function to delete an item
     const deleteItem = (id) => {
         let items = JSON.parse(localStorage.getItem('items')) || [];
         items = items.filter(item => item.id !== id);
         localStorage.setItem('items', JSON.stringify(items));
-        loadItems();
+        loadItems(); // Reload the item list
     };
 
+    // Function to delete selected items
     const deleteSelectedItems = () => {
         const selectedItems = document.querySelectorAll('.item-checkbox:checked');
         selectedItems.forEach(checkbox => {
@@ -90,7 +86,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    itemList.addEventListener('click', (event) => {
+    // Event listeners
+      itemList.addEventListener('click', (event) => {
         if (event.target.classList.contains('edit-button')) {
             editItem(event.target.dataset.id);
         } else if (event.target.classList.contains('delete-button')) {
@@ -101,5 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
     deleteSelectedButton.addEventListener('click', deleteSelectedItems);
     itemForm.addEventListener('submit', saveItem);
 
+    // Initial load
     loadItems();
 });
